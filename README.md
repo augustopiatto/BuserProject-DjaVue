@@ -1,3 +1,8 @@
+Projeto criado para encontrar famosos nas em cidades que estes irão visitar.
+Fornecidas duas de três variáveis (nome do famoso, local e data), a terceira sairá como resultado.
+
+Utilizado: Vue, Javascript, CSS, Django, Postbird, HTML, Python.
+
 # 1. Dev-env, super-easy mode (docker all things)
 
 Requirements:
