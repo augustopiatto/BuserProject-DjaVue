@@ -54,6 +54,35 @@ class Localiza(models.Model):
     def to_dict_json(self):
         return {
             'famoso': self.famoso.nome,
+            'fimagem': self.famoso.imagem.url,
             'cidade': self.cidade.nome,
             'data': self.data.isoformat()
+        }
+
+
+def _user2dict(user):
+    d = {
+        'id': user.id,
+        'name': user.get_full_name(),
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email,
+        'permissions': {
+            'ADMIN': user.is_superuser,
+            'STAFF': user.is_staff,
+        }
+    }
+    return d
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        User, related_name='profile', on_delete=models.CASCADE)
+    cidade = models.CharField(max_length=100, null=True)
+
+    def to_dict_json(self):
+        return {
+            'user': _user2dict(self.user),
+            'cidade': self.cidade
         }

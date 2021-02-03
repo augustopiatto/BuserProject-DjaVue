@@ -6,6 +6,7 @@
         <v-container fluid>
           <v-text-field label="Nome" required v-model="first_name" />
           <v-text-field label="Sobrenome" required v-model="last_name" />
+          <v-text-field label="Cidade" required v-model="cidade" />
           <v-text-field label="Nome do usuário" required v-model="username" />
           <v-text-field label="E-mail" required v-model="email" />
           <v-text-field label="Senha" type="password" required v-model="password" @keyup.enter="signup()" />
@@ -32,6 +33,7 @@ export default {
       loading: false,
       first_name: '',
       last_name: '',
+      cidade: '',
       email: '',
       username: '',
       password: '',
@@ -48,7 +50,7 @@ export default {
     async signup () {
       this.loading = true
       this.error = false
-      const user = await api.signup(this.first_name, this.last_name, this.username, this.email, this.password)
+      const user = await api.signup(this.first_name, this.last_name, this.cidade, this.username, this.email, this.password)
       if (user) {
         this.visible = false
       } else {

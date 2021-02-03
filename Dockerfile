@@ -1,6 +1,6 @@
 FROM python:3.6-alpine
 
-RUN apk add openrc bash curl vim nano git zip unzip nginx gcc libc-dev linux-headers nodejs npm postgresql-libs musl-dev postgresql-dev && \
+RUN apk --update-cache add openrc bash jpeg-dev zlib-dev curl vim nano git zip unzip nginx gcc libc-dev linux-headers nodejs npm postgresql-libs musl-dev postgresql-dev && \
     mkdir /run/nginx && \
     pip install uwsgi uwsgitop
 
@@ -23,7 +23,7 @@ RUN cd frontend && npm install && npm install -g pm2
 COPY frontend frontend
 RUN cd frontend && npm run build
 
-ENV SHELL=/bin/bash PYTHONUNBUFFERED=1 NODE_ENV=production API_MOCK=0 PYTHONIOENCODING=UTF-8 LANG=en_US.UTF-8 DJANGO_STATIC_ROOT=/dkdata/static DJANGO_LOG_FILE=/dkdata/famass.log UWSGI_PROCESSES=3 PORT=3000 HOST=0.0.0.0 API_BASE_URL=http://localhost:8000
+ENV SHELL=/bin/bash PYTHONUNBUFFERED=1 NODE_ENV=production API_MOCK=0 PYTHONIOENCODING=UTF-8 LANG=en_US.UTF-8 DJANGO_STATIC_ROOT=/dkdata/static DJANGO_MEDIA_ROOT=/dkdata/media DJANGO_LOG_FILE=/dkdata/famass.log UWSGI_PROCESSES=3 PORT=3000 HOST=0.0.0.0 API_BASE_URL=http://localhost:8000
 
 COPY . /app
 COPY docker/bin/* /usr/bin/

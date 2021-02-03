@@ -8,6 +8,7 @@
       </span>
     </v-toolbar-title>
     <v-spacer />
+    <v-btn height="100%" color="black" :to="{name: 'mypage'}" v-if="logged_user">Minha página</v-btn>
     <v-btn height="100%" color="black" :to="{name: 'famosos'}"><v-icon class="icones">mdi-account-heart</v-icon>Famosos</v-btn>
     <v-btn height="100%" color="black" :to="{name: 'cidades'}"><v-icon class="icones">mdi-city</v-icon>Cidades</v-btn>
     <v-btn height="100%" color="black" :to="{name: 'sobre'}"><v-icon class="icones">mdi-information</v-icon>Sobre</v-btn>

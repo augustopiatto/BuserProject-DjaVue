@@ -6,8 +6,9 @@ from django.contrib import auth
 from django.contrib.auth.models import User
 from commons.django_model_utils import get_or_none
 from commons.django_views_utils import ajax_login_required
-from core.service import log_svc, globalsettings_svc, localiza_svc, famoso_svc, cidade_svc
+from core.service import log_svc, globalsettings_svc, localiza_svc, famoso_svc, cidade_svc, profile_svc, mypage_svc
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 
 def dapau(request):
@@ -24,8 +25,10 @@ def login(request):
         if user.is_active:
             auth.login(request, user)
             log_svc.log_login(request.user)
+            profile = profile_svc.cidade(user)
+            profile_dict = profile.to_dict_json()
             user_dict = _user2dict(user)
-    return JsonResponse(user_dict, safe=False)
+    return JsonResponse(profile_dict, safe=False)
 
 
 def logout(request):
@@ -45,9 +48,20 @@ def signup(request):
         username=username, email=email, password=password)
     user.first_name = request.POST['first_name']
     user.last_name = request.POST['last_name']
+    cidade = request.POST['cidade']
     user.save()
+    profile = profile_svc.sign_up(user, cidade)
+    profile_dict = profile.to_dict_json()
     user_dict = _user2dict(user)
-    return JsonResponse(user_dict, safe=False)
+    return JsonResponse(profile_dict, safe=False)
+
+@login_required
+def mypage(request, cidade=""):
+    minhapagina = list(mypage_svc.mypage(cidade))
+    info = []
+    for obj in minhapagina:
+        info.append(obj.to_dict_json())
+    return JsonResponse(info, safe=False)
 
 
 def add_famoso(request):
@@ -73,9 +87,11 @@ def add_cidade(request):
 
 
 def whoami(request):
+    profile = profile_svc.cidade(request.user)
     i_am = {
-        'user': _user2dict(request.user),
+        'user': _user2dict(profile.user),
         'authenticated': True,
+        'cidade': profile.cidade
     } if request.user.is_authenticated else {'authenticated': False}
     return JsonResponse(i_am)
 

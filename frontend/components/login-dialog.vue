@@ -42,9 +42,10 @@ export default {
     async login () {
       this.loading = true
       this.error = false
-      const user = await api.login(this.username, this.password)
-      if (user) {
-        this.$store.commit('auth/setCurrentUser', user)
+      const profile = await api.login(this.username, this.password)
+      if (profile) {
+        this.$store.commit('auth/setCurrentUser', profile.user)
+        this.$store.commit('auth/setCidade', profile.cidade)
         this.visible = false
       } else {
         this.error = true

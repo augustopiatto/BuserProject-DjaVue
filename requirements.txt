@@ -5,3 +5,4 @@ coverage==4.5
 tblib==1.3.2
 raven==6.10.0
 wikipedia==1.4.0
+Pillow==8.1.0

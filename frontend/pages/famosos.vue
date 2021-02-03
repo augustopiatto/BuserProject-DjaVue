@@ -13,7 +13,7 @@
         :key="item.title"
       >
         <v-list-item-avatar>
-          <v-img :src="item.imagem" class="foto picture" />
+          <v-img :src="item.imagem" style="height: 70px; max-width: 100px; width: 70px;" />
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -96,8 +96,5 @@ export default {
   }
   .text.texto {
     font-size: 18px;
-  }
-  .foto.picture {
-    height: 100px;
   }
 </style>

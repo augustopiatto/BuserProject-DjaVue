@@ -1,5 +1,8 @@
 <template>
   <div class="main">
+    <div>
+      <h1 class="textinho">Bem vindo(a) ao FAMASS!<br> Aqui você pode encontrar o seu ídolo quando desejar!!!</h1>
+    </div>
     <v-layout class="corpoprincipal">
       <div class="i-container">
         <div class="i-icon-start">
@@ -13,11 +16,31 @@
         </div>
         <input type="text" id="pesquisa_cidade" v-model="cid" placeholder="Digite a cidade" class="i-field">
       </div>
-      <div class="i-container">
+      <div class="i-container" style="margin-top: -4px;">
         <div class="i-icon-start">
-          <v-icon color="black">mdi-magnify</v-icon>
+          <v-icon color="black" @click="change">mdi-magnify</v-icon>
         </div>
-        <input type="text" id="pesquisa_data" v-model="dat" placeholder="Digite a data" class="i-field">
+        <v-menu
+          v-model="menu2"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              class="i-field"
+              v-model="dat"
+              v-bind="attrs"
+              v-on="on"
+            />
+          </template>
+          <v-date-picker
+            v-model="dat"
+            @input="menu2 = false"
+          />
+        </v-menu>
       </div>
     </v-layout>
     <div class="corporesto">
@@ -25,7 +48,7 @@
         Pesquisar
       </v-btn>
       <label class="resultado" v-for="localiza in resultado" :key="localiza.data">
-        {{localiza.famoso}} estará em {{localiza.cidade}} no dia {{localiza.data}}
+        {{localiza.famoso}} estará em {{localiza.cidade}} no dia {{new Date(localiza.data).getDate()+'/'+((new Date(localiza.data).getMonth()+1).toString().length === 1 ? '0'+ (new Date(localiza.data).getMonth()+1) : new Date(localiza.data).getMonth()+1)+'/'+new Date(localiza.data).getFullYear()}}
       </label>
     </div>
   </div>
@@ -38,6 +61,8 @@ import AppApi from '~api'
 export default {
   data () {
     return {
+      menu2: false,
+      visible: false,
       fam: '',
       cid: '',
       dat: '',
@@ -50,20 +75,39 @@ export default {
         .then(result => {
           this.resultado = result
         })
+    },
+    change () {
+      if (this.visible === true) {
+        this.visible = false
+      } else {
+        this.visible = true
+      }
     }
   }
 }
 </script>
 
 <style>
+  #input-45 {
+    color: rgb(120, 120, 120);
+    margin-top: -5px;
+  }
   .main {
-    height: 80vh;
+    height: 75vh;
+  }
+  .textinho {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    height: 15%;
+    text-align: center;
   }
   .corpoprincipal {
     display: flex;
     justify-content: space-around;
-    align-items: flex-end;
-    height: 35%;
+    align-items: flex-start;
+    height: 15%;
+    margin-top: 20px;
   }
   .corporesto {
     display: flex;
@@ -92,7 +136,6 @@ export default {
     font-size: 16px;
     font-weight: 400;
     line-height: normal;
-    display: block;
   }
   .i-icon-start {
     align-items: center;

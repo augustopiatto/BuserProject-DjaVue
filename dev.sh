@@ -3,7 +3,7 @@ RESTORE='\033[0m'
 RED='\033[00;31m'
 GREEN='\033[00;32m'
 YELLOW='\e[0;33m'
-HOST_PROD=famass.example.com
+HOST_PROD=famass.busercamp.com.br
 
 # Because nobody wants to be memorizing commands all the time
 # Instructions:
@@ -126,12 +126,7 @@ function dkrun_prod {
 
 function deploy_prod {
   rsync -av --exclude frontend/node_modules --exclude frontend/.nuxt * ubuntu@$HOST_PROD:./famass/
-  ssh ubuntu@$HOST_PROD "
-    cd ~/famass
-    source dev.sh
-    dkbuild
-    dkrun_prod
-  "
+  ssh ubuntu@$HOST_PROD "cd ~/famass && ./dkrunprod.sh"
 }
 
 function dk {

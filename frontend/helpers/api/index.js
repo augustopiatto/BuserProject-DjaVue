@@ -7,8 +7,8 @@ export default {
   logout () {
     return post('/api/logout')
   },
-  signup (first_name, last_name, username, email, password) {
-    return post('/api/signup', {first_name, last_name, username, email, password})
+  signup (first_name, last_name, cidade, username, email, password) {
+    return post('/api/signup', { first_name, last_name, cidade, username, email, password })
   },
   add_famoso (imagem, nome, descricao) {
     return post('/api/addfamoso', {imagem, nome, descricao})
@@ -45,5 +45,8 @@ export default {
     } else if (famoso === '' && cidade !== '' && data !== '') {
       return get(`/api/localiza/cidade=${cidade}/data=${data}`)
     }
+  },
+  mypage (cidade) {
+    return get(`api/mypage/${cidade}`)
   }
 }
