@@ -8,7 +8,6 @@ def sign_up(User, cidade):
 
 
 def cidade(user):
-    print(user)
     if user.is_anonymous:
         return {}
     else:

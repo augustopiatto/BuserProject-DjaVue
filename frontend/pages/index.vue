@@ -16,30 +16,49 @@
         </div>
         <input type="text" id="pesquisa_cidade" v-model="cid" placeholder="Digite a cidade" class="i-field">
       </div>
-      <div class="i-container" style="margin-top: -4px;">
+      <div class="i-container">
         <div class="i-icon-start">
-          <v-icon color="black" @click="change">mdi-magnify</v-icon>
+          <v-icon color="black">mdi-magnify</v-icon>
         </div>
         <v-menu
-          v-model="menu2"
+          ref="menu1"
+          v-model="menu1"
           :close-on-content-click="false"
-          :nudge-right="40"
           transition="scale-transition"
           offset-y
+          max-width="290px"
           min-width="auto"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
+              clearable
+              color="black"
+              style="margin-top: 0px;"
               class="i-field"
-              v-model="dat"
+              v-model="dateFormatted"
               v-bind="attrs"
+              @blur="date = parseDate(dateFormatted)"
               v-on="on"
             />
           </template>
           <v-date-picker
-            v-model="dat"
-            @input="menu2 = false"
-          />
+            color="black"
+            v-model="date"
+            no-title
+            @input="menu1 = false"
+          >
+            <v-btn
+              text color="white" @click="menu1 = false"
+            >
+              Cancel
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              text color="white" @click="clear()"
+            >
+              Clear
+            </v-btn>
+          </v-date-picker>
         </v-menu>
       </div>
     </v-layout>
@@ -48,7 +67,7 @@
         Pesquisar
       </v-btn>
       <label class="resultado" v-for="localiza in resultado" :key="localiza.data">
-        {{localiza.famoso}} estará em {{localiza.cidade}} no dia {{new Date(localiza.data).getDate()+'/'+((new Date(localiza.data).getMonth()+1).toString().length === 1 ? '0'+ (new Date(localiza.data).getMonth()+1) : new Date(localiza.data).getMonth()+1)+'/'+new Date(localiza.data).getFullYear()}}
+        {{localiza.famoso}} estará em {{localiza.cidade}} no dia {{(new Date(localiza.data).getDate()+1)+'/'+((new Date(localiza.data).getMonth()+1).toString().length === 1 ? '0'+ (new Date(localiza.data).getMonth()+1) : new Date(localiza.data).getMonth()+1)+'/'+new Date(localiza.data).getFullYear()}}
       </label>
     </div>
   </div>
@@ -59,19 +78,46 @@
 import AppApi from '~api'
 
 export default {
-  data () {
-    return {
-      menu2: false,
-      visible: false,
-      fam: '',
-      cid: '',
-      dat: '',
-      resultado: ''
+  data: vm => ({
+    dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
+    menu1: false,
+    menu2: false,
+    visible: false,
+    fam: '',
+    cid: '',
+    date: '',
+    resultado: ''
+  }),
+  computed: {
+    computedDateFormatted () {
+      return this.formatDate(this.date)
+    }
+  },
+  watch: {
+    date (val) {
+      this.dateFormatted = this.formatDate(this.date)
     }
   },
   methods: {
+    clear () {
+      this.date = ''
+    },
+    formatDate (date) {
+      if (!date) {
+        return null
+      }
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+    parseDate (date) {
+      if (!date) {
+        return null
+      }
+      const [month, day, year] = date.split('/')
+      return `${year}-${day.padStart(2, '0')}-${month.padStart(2, '0')}`
+    },
     pesquisar () {
-      AppApi.localiza(this.fam, this.cid, this.dat)
+      AppApi.localiza(this.fam, this.cid, this.date)
         .then(result => {
           this.resultado = result
         })

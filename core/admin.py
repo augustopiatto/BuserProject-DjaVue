@@ -6,13 +6,13 @@ class ActivityLogAdmin(admin.ModelAdmin):
     list_display = ('type', 'logged_user', 'created_at')
 
 class LocalizaAdmin(admin.ModelAdmin):
-    list_display = ('famoso', 'cidade', 'data')
+    list_display = ('famoso', 'cidade', 'data', 'id')
 
 class FamosoAdmin(admin.ModelAdmin):
-    list_display = ('imagem', 'nome', 'descricao')
+    list_display = ('imagem', 'nome', 'descricao', 'id')
 
 class CidadeAdmin(admin.ModelAdmin):
-    list_display = ('imagem', 'nome', 'descricao')
+    list_display = ('imagem', 'nome', 'descricao', 'id')
 
 
 class ProfileAdmin(admin.ModelAdmin):
